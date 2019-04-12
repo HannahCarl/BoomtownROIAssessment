@@ -1,3 +1,5 @@
+//Assessment completed by Hannah Carl
+
 package com.boomtown;
 
 import java.io.BufferedReader;
@@ -58,17 +60,16 @@ public class boomtownROI {
 				tempList = apiURLInfoList[i].split("\"id\"|\\:|\\,");
 				cleanIdString = tempList[2].replaceAll("\"|\\s", "");
 				
-				//find name of object for id
-				//will exclude first line of api to prevent exception
+				//Find name of object for id
+				//Will exclude first line of api to prevent exception
 				if(i != 0 ) {
 					cleanName = apiURLInfoList[i-1].replaceAll("[\\{ \":,\\[]", "");
 				}
-				//Add clean name and clean id string
+				//Add clean name and clean id string to list
 				if(!cleanName.equals("")) {
 					idValuesParsed.add(cleanName);
 				}
-				idValuesParsed.add(cleanIdString);
-				
+				idValuesParsed.add(cleanIdString);	
 			}
 		}
 		return idValuesParsed;
@@ -93,9 +94,12 @@ public class boomtownROI {
 			
 			//If http code is 200
 			if(httpCode ==200) {
+				//Get api info and parse id values out
 				apiInfoFromURL = getAPIInformation(boomtownURLList.get(i));
-				System.out.println("\nStatus Code: " + httpCode + " URL: " + boomtownURLList.get(i) );
 				idValuesFromURL = parseApiId(apiInfoFromURL);
+				
+				//Output Title
+				System.out.println("\nStatus Code: " + httpCode + " URL: " + boomtownURLList.get(i) );
 				
 				//Loop to print IDs and Objects associated
 				for(int j = 0; j < idValuesFromURL.size(); j++) {
@@ -108,7 +112,7 @@ public class boomtownROI {
 					}
 				}
 			}
-			//if http code anything else
+			//If http code anything else
 			else {
 				System.out.println("\nFailed Request" + " Status Code: " + httpCode + " URL: "+ boomtownURLList.get(i) );
 			}
@@ -122,7 +126,7 @@ public class boomtownROI {
 		String createdTime = "";
 		String updatedTime = "";
 		
-		//Loop to find created and updated times
+		//Loop to find created, updated times and clean up string
 		for(int i = 0; i < apiInformationList.length; i++) {
 			if(apiInformationList[i].indexOf("\"created_at\":") != -1) {
 				createdTime = apiInformationList[i].replaceAll("\\s|created_at|\":|\\,|\"", "");
@@ -150,7 +154,7 @@ public class boomtownROI {
 		int reposCounter = 0;
 		int pageNumber = 1;
 		
-		//Loop to find public_repos
+		//Loop to find public_repos, repos_url and clean up string
 		for(int i = 0; i < apiInformationList.length; i++) {
 			if(apiInformationList[i].indexOf("\"public_repos\":") != -1) {
 				publicRepos = Integer.parseInt(apiInformationList[i].replaceAll("\\s|public_repos|:|\\,|\"", ""));
@@ -162,6 +166,7 @@ public class boomtownROI {
 		
 		//Loop to count repositories from repos page
 		while (reposCounter < publicRepos) {
+			//Add page number to url
 			repositoryURLWithPageNumber = repositoryURL + "?page=" + pageNumber;
 			
 			//Get api information from repository api
@@ -173,6 +178,7 @@ public class boomtownROI {
 					reposCounter++;
 				}
 			}
+			//Increment page number
 			pageNumber++;
 		}
 		
@@ -196,29 +202,7 @@ public class boomtownROI {
 		outputAPIInformation(apiInformation);
 		verifyDateInformation(apiInformation);
 		compareReposCount(apiInformation);
-		
-	/*	ArrayList<String> apiInformation = new ArrayList<String>();
-		BufferedReader reader = new BufferedReader(new FileReader("boomtownroi.txt"));
-		String line;
-		while((line = reader.readLine()) !=null) {
-			apiInformation.add(line);
-			//System.out.println(line);
-		}
-		reader.close();
-		String[] tempList = new String[apiInformation.size()];
-		for(int i =0; i < tempList.length; i++) {
-			tempList[i] = apiInformation.get(i);
-		}
-		
-		verifyDateInformation(tempList);
-		compareReposCount(tempList);*/
-		
-		
-		
-		
-		
-		
-		
+			
 	}
 
 }
