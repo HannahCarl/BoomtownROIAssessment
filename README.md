@@ -11,15 +11,22 @@
 ---
 
 ## Output
-1. Lists URL's status codes and relevant ID's with object name if applicable
-Status Code: 200 URL: https://api.github.com/orgs/BoomTownROI/repos
-ID: 14281973
-Object: loginBoomTownROI;  ID: 1214096
+**1. Lists URL's status codes and relevant ID's with object name if applicable**
 
-2. Date Verification
-Date Verified: true
-Created Time: 2011-11-22T21:48:43Z Updated Time: 2019-03-20T19:34:17Z
+*Status Code: 200 URL: https://api.github.com/orgs/BoomTownROI/repos*
 
-3. Repository Counter Verified
-Repository Counter: Verified
-Repository Count: 39
+*ID: 14281973*
+
+*Object: loginBoomTownROI;  ID: 1214096*
+
+**2. Date Verification**
+
+*Date Verified: true*
+
+*Created Time: 2011-11-22T21:48:43Z Updated Time: 2019-03-20T19:34:17Z*
+
+**3. Repository Counter Verified**
+
+*Repository Counter: Verified*
+
+*Repository Count: 39*
