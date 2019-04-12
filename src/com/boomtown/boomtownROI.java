@@ -1,7 +1,6 @@
 package com.boomtown;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -41,6 +40,8 @@ public class boomtownROI {
 		
 		//Get response code
 		httpCode = connection.getResponseCode();
+		
+		connection.disconnect();
 		
 		return httpCode;
 	}
@@ -139,17 +140,64 @@ public class boomtownROI {
 		System.out.println("\nDate Verified: " +datesCorrect + "\nCreated Time: " + createdTime + " Updated Time: " + updatedTime);
 
 	}
+	
+	//Method to verify repository count
+	public static void compareReposCount(String[] apiInformationList) throws IOException {
+		String repositoryURL = "";
+		String repositoryURLWithPageNumber = "";
+		String[] reposApi;
+		int publicRepos = 0;
+		int reposCounter = 0;
+		int pageNumber = 1;
+		
+		//Loop to find public_repos
+		for(int i = 0; i < apiInformationList.length; i++) {
+			if(apiInformationList[i].indexOf("\"public_repos\":") != -1) {
+				publicRepos = Integer.parseInt(apiInformationList[i].replaceAll("\\s|public_repos|:|\\,|\"", ""));
+			}
+			if(apiInformationList[i].indexOf("\"repos_url\":") != -1) {
+				repositoryURL = apiInformationList[i].replaceAll("\\s|repos_url|\":|\\,|\"", "");
+			}
+		}
+		
+		//Loop to count repositories from repos page
+		while (reposCounter < publicRepos) {
+			repositoryURLWithPageNumber = repositoryURL + "?page=" + pageNumber;
+			
+			//Get api information from repository api
+			reposApi = getAPIInformation(repositoryURLWithPageNumber);
+		
+			//Count how many repositories are listed
+			for(int i =0; i < reposApi.length; i++) {
+				if(reposApi[i].indexOf("\"full_name\":") != -1) {
+					reposCounter++;
+				}
+			}
+			pageNumber++;
+		}
+		
+		//Output
+		if(reposCounter == publicRepos) {
+			System.out.println("\nRepository Counter: Verified");
+			System.out.println("Repository Count: "+ reposCounter);
+		}
+		else {
+			System.out.println("\nRespository Counter: Not Verified " + reposCounter);
+		}
+
+	}
 
 	//Main method
 	public static void main(String[] args) throws IOException {
 		
 		String url = "https://api.github.com/orgs/boomtownroi";
 		
-		//String [] apiInformation = getAPIInformation(url);
-		//outputAPIInformation(apiInformation);
-		//verifyDateInformation(apiInformation);
+		String [] apiInformation = getAPIInformation(url);
+		outputAPIInformation(apiInformation);
+		verifyDateInformation(apiInformation);
+		compareReposCount(apiInformation);
 		
-		ArrayList<String> apiInformation = new ArrayList<String>();
+	/*	ArrayList<String> apiInformation = new ArrayList<String>();
 		BufferedReader reader = new BufferedReader(new FileReader("boomtownroi.txt"));
 		String line;
 		while((line = reader.readLine()) !=null) {
@@ -163,9 +211,10 @@ public class boomtownROI {
 		}
 		
 		verifyDateInformation(tempList);
+		compareReposCount(tempList);*/
 		
 		
-		//System.out.println(apiIDs);
+		
 		
 		
 		
